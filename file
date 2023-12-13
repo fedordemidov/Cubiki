@@ -1,0 +1,144 @@
+https://replit.com/@Fro1ov/GullibleWeepyControlflowgraph
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Заявки</title>
+  <style>
+    /* Стили для таблицы */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* Стили для формы */
+    form {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Заявки</h1>
+
+  <form id="addForm">
+    <h2>Добавить заявку</h2>
+    <input type="text" id="requestNumber" placeholder="Номер заявки" required>
+    <input type="date" id="requestDate" required>
+    <input type="text" id="requestDescription" placeholder="Описание проблемы" required>
+    <select id="requestStatus" required>
+      <option value="в ожидании">В ожидании</option>
+      <option value="в работе">В работе</option>
+      <option value="выполнено">Выполнено</option>
+    </select>
+    <input type="submit" value="Добавить заявку">
+  </form>
+
+  <h2>Список заявок</h2>
+  <table id="requestTable">
+    <tr>
+      <th>Номер заявки</th>
+      <th>Дата добавления</th>
+      <th>Описание проблемы</th>
+      <th>Статус</th>
+      <th>Действия</th>
+    </tr>
+  </table>
+
+  <h2>Выполненные заявки</h2>
+  <table id="completedTable">
+    <tr>
+      <th>Номер заявки</th>
+      <th>Дата добавления</th>
+      <th>Описание проблемы</th>
+      <th>Статус</th>
+      <th>Действия</th>
+    </tr>
+  </table>
+
+  <script>
+    // Обработчик отправки формы
+    document.getElementById("addForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      var requestNumber = document.getElementById("requestNumber").value;
+      var requestDate = document.getElementById("requestDate").value;
+      var requestDescription = document.getElementById("requestDescription").value;
+      var requestStatus = document.getElementById("requestStatus").value;
+
+      // Создание новой строки в таблице заявок
+      var requestTable = document.getElementById("requestTable");
+      var newRow = requestTable.insertRow(-1);
+      newRow.innerHTML = "<td>" + requestNumber + "</td><td>" + requestDate + "</td><td>" + requestDescription + "</td><td>" + requestStatus + "</td><td><button onclick='completeRequest(this)'>Выполнено</button></td>";
+
+      // Если статус заявки "выполнено", добавляем строку в таблицу выполненных заявок
+      if (requestStatus === "выполнено") {
+        var completedTable = document.getElementById("completedTable");
+        var completedRow = completedTable.insertRow(-1);
+        completedRow.innerHTML = "<td>" + requestNumber + "</td><td>" + requestDate + "</td><td>" + requestDescription + "</td><td>" + requestStatus + "</td><td><button onclick='reopenRequest(this)'>Открыть заново</button></td>";
+      }
+
+      // Сброс значений формы
+      document.getElementById("addForm").reset();
+    });
+
+    // Функция для изменения статуса заявки на "выполнено"
+    function completeRequest(button) {
+      var row = button.parentNode.parentNode;
+      var requestNumber = row.cells[0].innerHTML;
+      var requestDate = row.cells[1].innerHTML;
+      var requestDescription = row.cells[2].innerHTML;
+
+      // Удаление строки из таблицы заявок и добавление в таблицу выполненных заявок
+      var completedTable = document.getElementById("completedTable");
+      var completedRow = completedTable.insertRow(-1);
+      completedRow.innerHTML = "<td>" + requestNumber + "</td><td>" + requestDate + "</td><td>" + requestDescription + "</td><td>выполнено</td><td><button onclick='reopenRequest(this)'>Открыть заново</button></td>";
+
+      row.parentNode.removeChild(row);
+    }
+
+    // Функция для изменения статуса заявки на "в работе"
+    function reopenRequest(button) {
+      var row = button.parentNode.parentNode;
+      var requestNumber = row.cells[0].innerHTML;
+      var requestDate = row.cells[1].innerHTML;
+      var requestDescription = row.cells[2].innerHTML;
+
+      // Удаление строки из таблицы выполненных заявок и добавление в таблицу заявок со статусом "в работе"
+      var requestTable = document.getElementById("requestTable");
+      var newRow = requestTable.insertRow(-1);
+      newRow.innerHTML = "<td>" + requestNumber + "</td><td>" + requestDate + "</td><td>" + requestDescription + "</td><td>в работе</td><td><button onclick='completeRequest(this)'>Выполнено</button></td>";
+
+      row.parentNode.removeChild(row);
+    }
+  </script>
+</body>
+</html>
